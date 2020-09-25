@@ -24,7 +24,7 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, HIGH);
   button.begin();
-  button.onPressed(buttonPressed);
+  button.onPressed(startOnTime);
   button.onSequence(2, 900, turnOff);
   button.enableInterrupt(buttonISR);
   led.begin();
@@ -52,7 +52,7 @@ void updateLED(unsigned long timeLeft){
     led.setPixelColor(0, led.gamma32(led.ColorHSV(pixelHue)));
 }
 
-void buttonPressed()
+void startOnTime()
 {
   powerOn = true;
   timerStart = millis();
