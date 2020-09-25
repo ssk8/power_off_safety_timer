@@ -9,7 +9,7 @@
 #define RELAY_PIN 1
 #define BUTTON_PIN 2
 
-const unsigned long powerOnTime = 10 * 60 * 1000;
+const unsigned long powerOnTime = 600000;
 
 bool powerOn = false;
 unsigned long timerStart = 0;
@@ -25,7 +25,7 @@ void setup() {
   digitalWrite(RELAY_PIN, HIGH);
   button.begin();
   button.onPressed(buttonPressed);
-  button.onSequence(2, 900, doubleClick);
+  button.onSequence(2, 900, turnOff);
   button.enableInterrupt(buttonISR);
   led.begin();
   led.show();
@@ -41,19 +41,15 @@ void loop() {
   else {
     digitalWrite(RELAY_PIN, HIGH);
     led.setPixelColor(0, 0, 0, 0);
-    led.show();
   }
-  if (timerStart!=0 && millis()-timerStart > powerOnTime){
-    timerStart = 0;
-    powerOn = false;
-  }
+  if (timerStart!=0 && millis()-timerStart > powerOnTime) turnOff();
+  led.show();
 }
 
 
 void updateLED(unsigned long timeLeft){
     long pixelHue = map(timeLeft, 0, powerOnTime, 0, 50000);
     led.setPixelColor(0, led.gamma32(led.ColorHSV(pixelHue)));
-    led.show();
 }
 
 void buttonPressed()
@@ -62,7 +58,7 @@ void buttonPressed()
   timerStart = millis();
 }
 
-void doubleClick()
+void turnOff()
 {
   powerOn = false;
   timerStart = 0;
