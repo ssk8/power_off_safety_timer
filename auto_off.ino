@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include <EasyButton.h>
 #include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+ #include <avr/power.h>
+#endif
 
 #define LED_PIN   0
 #define RELAY_PIN 1
