@@ -26,7 +26,7 @@ void setup() {
   button.begin();
   button.onPressed(startOnTime);
   button.onSequence(2, 900, turnOff);
-  button.enableInterrupt(buttonISR);
+  button.enableInterrupt(buttonInterrupt);
   led.begin();
   led.show();
   led.setBrightness(255);
@@ -42,14 +42,14 @@ void loop() {
     digitalWrite(RELAY_PIN, HIGH);
     led.setPixelColor(0, 0, 0, 0);
   }
-  if (timerStart!=0 && millis()-timerStart > powerOnTime) turnOff();
   led.show();
+  if (timerStart!=0 && millis()-timerStart > powerOnTime) turnOff();
 }
 
 
 void updateLED(unsigned long timeLeft){
-    long pixelHue = map(timeLeft, 0, powerOnTime, 0, 50000);
-    led.setPixelColor(0, led.gamma32(led.ColorHSV(pixelHue)));
+    unsigned long color = timeLeft/(powerOnTime/50000);
+    led.setPixelColor(0, led.gamma32(led.ColorHSV(color)));
 }
 
 void startOnTime()
@@ -64,7 +64,7 @@ void turnOff()
   timerStart = 0;
 }
 
-void buttonISR()
+void buttonInterrupt()
 {
   button.read();
 }
